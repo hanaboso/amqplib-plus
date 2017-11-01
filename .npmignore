@@ -1,6 +1,6 @@
 package-lock.json
 node_modules
-lib
-test
+src
 tsconfig.json
 tslint.json
+.idea

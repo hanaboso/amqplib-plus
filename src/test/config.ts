@@ -1,4 +1,4 @@
-import {IConnectionOptions} from "../src/Connection";
+import {IConnectionOptions} from "../lib/Connection";
 
 export const rabbitMQOptions: IConnectionOptions = {
     host: process.env.RABBITMQ_HOST || "localhost",

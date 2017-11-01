@@ -14,8 +14,8 @@
   },
   "compileOnSave": true,
   "include": [
-    "lib/**/*",
-    "test/**/*"
+    "src/lib/**/*",
+    "src/test/**/*"
   ],
   "exclude": [
     "node_modules"
