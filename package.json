@@ -19,7 +19,8 @@
     "consumer",
     "publisher"
   ],
-  "author": "Hanaboso",
+  "author": "Tomas Sedlacek <mail@kedlas.cz>",
+  "contributors": [],
   "license": "ISC",
   "dependencies": {
     "amqplib": "0.5.1"
@@ -32,7 +33,6 @@
     "chai": "3.5.0",
     "jasmine": "2.8.0",
     "mocha": "3.5.2",
-    "shared-git-hooks": "1.2.1",
     "ts-mockito": "2.2.5",
     "ts-node": "3.3.0",
     "tslint": "5.7.0",

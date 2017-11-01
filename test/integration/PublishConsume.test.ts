@@ -1,7 +1,7 @@
 import {Channel, Message} from "amqplib";
-import { default as AMQPConnection } from "../../src/Connection";
-import Publisher from "../../src/Publisher";
-import SimpleConsumer from "../../src/SimpleConsumer";
+import { default as AMQPConnection } from "../../lib/Connection";
+import Publisher from "../../lib/Publisher";
+import SimpleConsumer from "../../lib/SimpleConsumer";
 import {rabbitMQOptions} from "../config";
 
 import { assert } from "chai";

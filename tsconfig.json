@@ -14,7 +14,7 @@
   },
   "compileOnSave": true,
   "include": [
-    "src/**/*",
+    "lib/**/*",
     "test/**/*"
   ],
   "exclude": [

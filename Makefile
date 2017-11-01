@@ -9,4 +9,5 @@ test:
 	$(DC) pull
 	$(DC) up -d --force-recreate
 	$(DE) sleep 5
+	$(DE) npm install
 	$(DE) npm test

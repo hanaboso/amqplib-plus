@@ -8,8 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Connection_1 = require("../../src/Connection");
-const Publisher_1 = require("../../src/Publisher");
+const Connection_1 = require("../../lib/Connection");
+const Publisher_1 = require("../../lib/Publisher");
 const config_1 = require("../config");
 const chai_1 = require("chai");
 require("mocha");

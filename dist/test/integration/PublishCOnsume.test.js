@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Connection_1 = require("../../src/Connection");
-const Publisher_1 = require("../../src/Publisher");
-const SimpleConsumer_1 = require("../../src/SimpleConsumer");
+const Connection_1 = require("../../lib/Connection");
+const Publisher_1 = require("../../lib/Publisher");
+const SimpleConsumer_1 = require("../../lib/SimpleConsumer");
 const config_1 = require("../config");
 const chai_1 = require("chai");
 require("mocha");
@@ -57,4 +57,4 @@ describe("Publish Consume", () => {
         }
     });
 });
-//# sourceMappingURL=PublishConsume.test.js.map
+//# sourceMappingURL=PublishCOnsume.test.js.map

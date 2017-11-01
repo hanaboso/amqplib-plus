@@ -1,5 +1,5 @@
-import { default as AMQPConnection } from "../../src/Connection";
-import Publisher from "../../src/Publisher";
+import { default as AMQPConnection } from "../../lib/Connection";
+import Publisher from "../../lib/Publisher";
 import {rabbitMQOptions} from "../config";
 
 import { assert } from "chai";
