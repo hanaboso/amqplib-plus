@@ -10,4 +10,5 @@ test:
 	$(DC) up -d --force-recreate
 	$(DE) sleep 5
 	$(DE) npm install
+	$(DE) npm run build
 	$(DE) npm test

@@ -10,12 +10,18 @@ Amqplib-plus adds following features:
 
 ## How to use
 
-Import dependencies:
+Import dependencies (Typescript):
 ```ecmascript
 import {Channel, Options, Message} from "amqplib";
-import Connection from "amqplib-plus/Connection";
-import Publisher from "amqplib-plus/Publisher";
-import SimpleConsumer from "amqplib-plus/SimpleConsumer";
+import Connection from "amqplib-plus/dist/lib/Connection";
+import Publisher from "amqplib-plus/dist/lib/Publisher";
+import SimpleConsumer from "amqplib-plus/dist/lib/SimpleConsumer";
+```
+
+Import dependencies (ES6):
+```ecmascript
+const Connection require("amqplib-plus/dist/lib/Connection");
+const conn = new Connection.default(args...);
 ```
 
 Set connection details and what to do before any message is published via this publisher instance
