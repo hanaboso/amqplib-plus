@@ -57,4 +57,4 @@ describe("Publish Consume", () => {
         }
     });
 });
-//# sourceMappingURL=PublishCOnsume.test.js.map
+//# sourceMappingURL=PublishConsume.test.js.map
