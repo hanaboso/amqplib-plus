@@ -2,7 +2,7 @@
   "name": "amqplib-plus",
   "version": "0.0.1",
   "description": "Amqplib rabbitmq library enhancement.",
-  "main": "",
+  "main": "./dist/src/Connection.js",
   "scripts": {
     "test": "NODE_ENV=test ./node_modules/mocha/bin/mocha dist/test/**/*.test.js --recursive --reporter spec",
     "lint": "./node_modules/.bin/tslint ./src/**/*.ts ./test/**/*.ts",
@@ -10,12 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/hanaboso/amqplib-plus"
   },
   "keywords": [
-    "node-js",
-    "lib",
-    "common"
+    "nodejs",
+    "rabbitmq",
+    "amqplib",
+    "consumer",
+    "publisher"
   ],
   "author": "Hanaboso",
   "license": "ISC",
@@ -24,16 +26,16 @@
   },
   "devDependencies": {
     "@types/amqplib": "0.5.4",
-    "@types/chai": "^4.0.4",
-    "@types/mocha": "^2.2.43",
+    "@types/chai": "4.0.4",
+    "@types/mocha": "2.2.43",
     "@types/node": "8.0.20",
-    "chai": "^3.5.0",
-    "jasmine": "^2.8.0",
-    "mocha": "^3.5.2",
-    "shared-git-hooks": "^1.2.1",
-    "ts-mockito": "^2.2.5",
-    "ts-node": "^3.3.0",
-    "tslint": "^5.7.0",
-    "typescript": "^2.5.2"
+    "chai": "3.5.0",
+    "jasmine": "2.8.0",
+    "mocha": "3.5.2",
+    "shared-git-hooks": "1.2.1",
+    "ts-mockito": "2.2.5",
+    "ts-node": "3.3.0",
+    "tslint": "5.7.0",
+    "typescript": "2.5.2"
   }
 }
