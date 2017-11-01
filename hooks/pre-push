@@ -1,0 +1,14 @@
+#!/bin/sh
+
+docker rm -f my-rabbit -f
+docker run -d --hostname my-rabbit -p 15672:15672 -p 5672:5672 --name my-rabbit rabbitmq:3-management-alpine
+
+# wait for rabbit to be ready
+sleep 5
+
+# Redirect output to stderr.
+exec 1>&2
+
+npm run lint
+tsc -d
+npm test

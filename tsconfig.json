@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "charset": "utf8",
+    "noImplicitAny": true,
+    "removeComments": false,
+    "outDir": "dist/",
+    "sourceMap": true,
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "declaration": true
+  },
+  "compileOnSave": true,
+  "include": [
+    "src/**/*",
+    "test/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

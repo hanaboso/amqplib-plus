@@ -1,0 +1,21 @@
+version: '2'
+services:
+  app:
+    image: 'node:alpine'
+    volumes:
+      - '.:/usr/src/app'
+    working_dir: /usr/src/app
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASS=guest
+      - RABBITMQ_VHOST=/
+    depends_on:
+      - rabbitmq
+    command: sleep 10000
+  rabbitmq:
+    image: 'rabbitmq:management-alpine'
+    ports:
+      - '15672:15672'
+      - '5672:5672'
