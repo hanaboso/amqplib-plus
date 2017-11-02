@@ -96,7 +96,7 @@ const Connection  = require("amqplib-plus/dist/lib/Connection");
 const Publisher = require("amqplib-plus/dist/lib/Publisher");
 const SimpleConsumer = require("amqplib-plus/dist/lib/SimpleConsumer");
 
-const conn = new Connection({
+const conn = new Connection.default({
     host: "localhost",
     port: 5672,
     user: "guest",
@@ -104,8 +104,6 @@ const conn = new Connection({
     vhost: "/",
     heartbeat: 60,
 });
-
-const conn = new Connection.default(conn);
 
 // Create queues, exchanges and whatever else you want to have prepared before first publish 
 const prePublish = async (ch) => {
@@ -115,7 +113,7 @@ const prePublish = async (ch) => {
 }
 
 // Creates new publisher instance and publish message using it
-const publisher = new Publisher(conn, prePublish);
+const publisher = new Publisher.default(conn, prePublish);
 publisher.sendToQueue("queueName", new Buffer("test"), {});
 
 // Create new consumer instance and start consumption from queue
@@ -130,7 +128,7 @@ const process = (msg) => {
     // do whatever you want with the message
     console.log(msg);
 };
-const consumer = new SimpleConsumer(conn, preConsume, process);
+const consumer = new SimpleConsumer.default(conn, preConsume, process);
 consumer.consume("queueName", {});
 ```
 
