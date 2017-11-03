@@ -1,7 +1,7 @@
 import {Channel, Options} from "amqplib";
-import Client from "./Client";
-import { createChannelCallback, default as AMQPConnection } from "./Connection";
-import IPublisher from "./IPublisher";
+import {Client} from "./Client";
+import {Connection, createChannelCallback} from "./Connection";
+import {IPublisher} from "./IPublisher";
 
 interface IDrainBufferItem {
     exchange: string;
@@ -13,7 +13,7 @@ interface IDrainBufferItem {
 /**
  * Basic RabbitMQ Publisher implementation
  */
-class Publisher extends Client implements IPublisher {
+export class Publisher extends Client implements IPublisher {
 
     private drainBuffer: IDrainBufferItem[] = [];
 
@@ -22,7 +22,7 @@ class Publisher extends Client implements IPublisher {
      * @param {Connection} conn
      * @param {createChannelCallback} channelCallback
      */
-    public constructor(conn: AMQPConnection, channelCallback: createChannelCallback) {
+    public constructor(conn: Connection, channelCallback: createChannelCallback) {
         super(conn, channelCallback);
         this.hookDrainEvent();
     }
@@ -95,5 +95,3 @@ class Publisher extends Client implements IPublisher {
     }
 
 }
-
-export default Publisher;

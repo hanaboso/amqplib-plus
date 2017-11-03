@@ -1,11 +1,11 @@
-import { default as AMQPConnection } from "../../lib/Connection";
-import Publisher from "../../lib/Publisher";
-import {rabbitMQOptions} from "../config";
+import { Connection } from "../../lib/Connection";
+import { Publisher } from "../../lib/Publisher";
+import { rabbitMQOptions } from "../config";
 
 import { assert } from "chai";
 import "mocha";
 
-const conn = new AMQPConnection(rabbitMQOptions);
+const conn = new Connection(rabbitMQOptions);
 
 describe("Publisher", () => {
 

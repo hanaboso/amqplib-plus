@@ -1,13 +1,13 @@
 import { Channel, Message } from "amqplib";
-import Connection from "./Connection";
-import Consumer from "./Consumer";
+import { Connection } from "./Connection";
+import { Consumer } from "./Consumer";
 
 /**
  * Example implementation of Consumer
  *
  * Simple consumers automatically acks amqp message when consumed
  */
-class SimpleConsumer extends Consumer {
+export class SimpleConsumer extends Consumer {
 
     private processData: (msg: Message) => void;
 
@@ -38,5 +38,3 @@ class SimpleConsumer extends Consumer {
     }
 
 }
-
-export default SimpleConsumer;

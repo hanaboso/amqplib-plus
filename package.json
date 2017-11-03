@@ -1,6 +1,6 @@
 {
   "name": "amqplib-plus",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Amqplib rabbitmq library enhancement.",
   "main": "./dist/src/Connection.js",
   "scripts": {
@@ -28,9 +28,11 @@
   "devDependencies": {
     "@types/amqplib": "0.5.4",
     "@types/chai": "4.0.4",
+    "@types/core-js": "^0.9.43",
     "@types/mocha": "2.2.43",
-    "@types/node": "8.0.20",
+    "@types/node": "8.0.44",
     "chai": "3.5.0",
+    "core-js": "^2.5.1",
     "jasmine": "2.8.0",
     "mocha": "3.5.2",
     "ts-mockito": "2.2.5",

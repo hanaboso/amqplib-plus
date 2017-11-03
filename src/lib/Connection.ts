@@ -17,7 +17,7 @@ export type createChannelCallback = (ch: amqp.Channel) => Promise<void>;
 /**
  * Logical wrap for AMQP connection
  */
-class Connection {
+export class Connection {
 
     private connStr: string;
     private heartbeat: number;
@@ -101,7 +101,7 @@ class Connection {
                     // will be handled by close event
                 });
 
-                console.debug("Connected to RabbitMQ.");
+                console.log("Connected to RabbitMQ.");
             } catch (err) {
                 reconnect(err);
             }
@@ -112,5 +112,3 @@ class Connection {
         return connection;
     }
 }
-
-export default Connection;

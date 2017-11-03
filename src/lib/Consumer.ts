@@ -1,11 +1,11 @@
-import {Channel} from "amqplib";
+import { Channel } from "amqplib";
 import { Message, Options, Replies } from "amqplib/properties";
-import Client from "./Client";
+import { Client } from "./Client";
 
 /**
  * Consumer class to be overridden by your custom implementation with custom processMessage function
  */
-abstract class Consumer extends Client {
+export abstract class Consumer extends Client {
 
     /**
      * Start consuming messages from queue
@@ -46,5 +46,3 @@ abstract class Consumer extends Client {
     public abstract processMessage(msg: Message, channel: Channel): void;
 
 }
-
-export default Consumer;

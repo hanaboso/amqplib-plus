@@ -1,5 +1,4 @@
-
-interface IPublisher {
+export interface IPublisher {
 
     /**
      * Publishes message to the exchange
@@ -25,5 +24,3 @@ interface IPublisher {
     sendToQueue(queue: string, content: Buffer, options: {}): Promise<void>;
 
 }
-
-export default IPublisher;

@@ -1,22 +1,22 @@
 import {Channel} from "amqplib";
-import { createChannelCallback, default as AMQPConnection } from "./Connection";
+import { Connection, createChannelCallback } from "./Connection";
 
 /**
  * Abstract client connected to AMQP (can be publisher or consumer)
  */
-abstract class Client {
+export abstract class Client {
 
-    protected conn: AMQPConnection;
+    protected conn: Connection;
     protected channel: Promise<Channel>;
 
     private channelCb: createChannelCallback;
 
     /**
      *
-     * @param {AMQPConnection} conn
+     * @param {Connection} conn
      * @param {createChannelCallback} channelCallback
      */
-    public constructor(conn: AMQPConnection, channelCallback: createChannelCallback) {
+    public constructor(conn: Connection, channelCallback: createChannelCallback) {
         this.conn = conn;
         this.channelCb = channelCallback;
 
@@ -43,5 +43,3 @@ abstract class Client {
     }
 
 }
-
-export default Client;
