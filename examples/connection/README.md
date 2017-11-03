@@ -7,14 +7,16 @@ See the [connection.js](connection.js) script to understand how to use it.
 At first we must provide connection options to our running RabbitMQ instance (host, port, ...).
 Once we have this done, we create the Connection instance.
 If you follow the attached code, you will see that after connection is created, it provides us with two methods:
- - connect <Promise<Connection>>
- - createChannel: <Promise<Channel>>
+ - connect <Promise < Connection >>
+ - createChannel: <Promise < Channel > >
  
 The Channel is the original Channel object from amqplib (http://www.squaremobius.net/amqp.node/channel_api.html#channel), and can be used as you wish.
 
 ## Example
+`node connection.js`
 
-If you run the code eg. `node ./dist/examples/connection/connection.js` and your connection options are filled properly, you should see the "Connected to RabbitMq" log in your console.
+By running this script, you should see the "Connected to RabbitMq" log in your console.
+
 You can open your RabbitMQ Management console and check that there exist two queues created by running code, and there is a message in one "first-queue", that we published to it previously.
 You can manually publish some message to "second-queue" and it's content will be logged to console.
 

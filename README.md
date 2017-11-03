@@ -1,4 +1,4 @@
-#amqplib-plus
+# Amqplib-plus
 
 Amqplib-plus amplifies the original npm [amqplib library](https://www.npmjs.com/package/amqplib) with OOP approach.
 
