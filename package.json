@@ -1,6 +1,6 @@
 {
   "name": "amqplib-plus",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Amqplib rabbitmq library enhancement.",
   "main": "./dist/src/Connection.js",
   "scripts": {

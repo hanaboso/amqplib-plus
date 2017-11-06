@@ -44,71 +44,74 @@ export class Connection {
     /**
      * Returns promise of channel with applied functions on the channel
      */
-    public async createChannel(prepareChannel: createChannelCallback): Promise<amqp.Channel> {
-        let tries: number = 1;
-        let channel: amqp.Channel;
+    public createChannel(prepareFn: createChannelCallback): Promise<amqp.Channel> {
+        return new Promise((resolve) => {
+            let tryCount: number = 1;
 
-        const recreateChannel: (reason: any) => void = (reason) => {
-            console.error(`RabbitMQ channel failed. Reason: ${reason.message}`);
+            const reconnect: (reason: any) => void = (reason) => {
+                const wait: number = Math.min(WAIT_MS * tryCount, WAIT_MAX_MS); // wait max 5 min
 
-            const wait: number = Math.min(WAIT_MS * tries, WAIT_MAX_MS);
-            setTimeout(tryCreateChannel, wait);
-            tries += 1;
-        };
+                console.error(`Channel creation failed. Retry after ${wait} ms. Reason: ${reason}`);
 
-        const tryCreateChannel: () => void = async () => {
-            try {
-                const conn: amqp.Connection = await this.connection;
-                channel = await conn.createChannel();
-                await prepareChannel(channel);
+                setTimeout(tryConnect, wait);
+                tryCount += 1;
+            };
 
-                return channel;
-            } catch (err) {
-                recreateChannel(err);
-            }
-        };
+            let channel: amqp.Channel;
+            const tryConnect: () => void = () => this.connection
+                .then((connection) => {
+                    return connection.createChannel();
+                })
+                .then((ch: amqp.Channel) => {
+                    channel = ch;
+                    return prepareFn(ch);
+                })
+                .then(() => {
+                    return resolve(channel);
+                })
+                .catch(reconnect);
 
-        await tryCreateChannel();
-
-        return channel;
+            tryConnect();
+        });
     }
 
     /**
-     * Creates new connection to RabbitMQ promise
+     * Creates new connection promise to RabbitMQ
      */
-    private async createConnection(): Promise<amqp.Connection> {
-        let connection: amqp.Connection;
-        let tryCount = 1;
+    private createConnection(): Promise<amqp.Connection> {
+        return new Promise((resolve/* , reject*/) => {
+            let tryCount = 1;
 
-        const reconnect: (error: any) => void = (error) => {
-            console.error(`RabbitMQ connection failed. Reason: ${error.message}`);
-            const wait: number = Math.min(WAIT_MS * tryCount, WAIT_MAX_MS);
-            setTimeout(tryConnect, wait);
-            tryCount += 1;
-        };
+            const reconnect: (error: any) => void = (error) => {
+                /* try forever
+                if (tryCount >= (WAIT_MAX_MS / WAIT_MS) + WAIT_LIMIT) { // 5 min + 2 h
+                  reject(`Maximum (${tryCount}) reconnection attempts reached.`);
+                }*/
 
-        const tryConnect: () => void = async () => {
-            try {
-                connection = await amqp.connect(this.connStr, { heartbeat: this.heartbeat });
+                const wait: number = Math.min(WAIT_MS * tryCount, WAIT_MAX_MS); // wait max 5 min
 
-                connection.on("close", (error) => {
-                    console.warn("AMQP Connection closed", error ? error.message : "");
-                    this.connection = this.createConnection();
-                });
+                console.error(`RabbitMQ connection failure. Retry after ${wait} ms. Reason: ${error.message}`);
 
-                connection.on("error", (error) => {
-                    console.error("AMQP Connection error", error ? error.message : "");
-                    // will be handled by close event
-                });
+                setTimeout(tryConnect, wait);
+                tryCount += 1;
+            };
 
-                console.log("Connected to RabbitMQ.");
-            } catch (err) {
-                reconnect(err);
-            }
-        };
+            const tryConnect: () => void = () => amqp.connect(this.connStr, { heartbeat: this.heartbeat })
+                .then((connection) => {
+                    connection.on("close", (error) => {
+                        console.warn("AMQP Connection closed", error ? error.message : "");
+                        this.connection = this.createConnection();
+                    });
+                    connection.on("error", (error) => {
+                        console.error("AMQP Connection error", error ? error.message : "");
+                        // will be handled by close event
+                    });
+                    console.info("Connected to RabbitMQ.");
+                    resolve(connection);
+                })
+                .catch(reconnect);
 
-        await tryConnect();
-
-        return connection;
+            tryConnect();
+        });
     }
 }
