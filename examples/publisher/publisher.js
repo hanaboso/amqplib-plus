@@ -1,5 +1,5 @@
-const Connection = require("./../../dist/lib/Connection");
-const Publisher = require("./../../dist/lib/Publisher");
+const conn = require("./../../dist/lib/Connection");
+const pub = require("./../../dist/lib/Publisher");
 
 const options = {
 	host: "localhost",
@@ -10,7 +10,7 @@ const options = {
 	heartbeat: 60,
 };
 
-const connection = new Connection(options);
+const connection = new conn.Connection(options);
 
 async function run() {
 	await connection.connect();
@@ -20,14 +20,16 @@ async function run() {
 		await ch.assertQueue("target-queue", { durable: false });
 		await ch.assertExchange("target-exchange", "direct");
 		await ch.bindQueue("target-queue", "target-exchange", "routKey");
+		console.log("Publisher ready");
 	};
 
 	// Creates the instance
-	const publisher = new Publisher(connection, preparePublisher);
+	const publisher = new pub.Publisher(connection, preparePublisher);
 
 	// Send messages to message broker
 	await publisher.sendToQueue("target-queue", new Buffer("message content"), {});
 	await publisher.publish("target-exchange", "routKey", new Buffer("another content"), {});
+	console.log("Two messages sent.");
 }
 
 run();

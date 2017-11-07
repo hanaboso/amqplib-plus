@@ -1,4 +1,4 @@
-const Connection = require("../../dist/lib/Connection");
+const conn = require("../../dist/lib/Connection");
 
 const options = {
 	host: "localhost",
@@ -9,7 +9,7 @@ const options = {
 	heartbeat: 60,
 };
 
-const connection = new Connection(options);
+const connection = new conn.Connection(options);
 
 async function run() {
 	await connection.connect();

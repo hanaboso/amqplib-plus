@@ -1,6 +1,6 @@
 const Consumer = require("./../../dist/lib/Consumer");
 
-class CustomConsumer extends Consumer {
+class CustomConsumer extends Consumer.Consumer {
 
 	constructor(conn, prepareFn) {
 		super(conn, prepareFn);
@@ -9,10 +9,10 @@ class CustomConsumer extends Consumer {
 	processMessage(msg, channel) {
 		// Your own messages process logic
 		console.log("Message headers:", JSON.stringify(msg.properties.headers));
-		console.log("Message body:", msg.body.toString());
+		console.log("Message body:", msg.content.toString());
 
 		// Your own condition to decide whether to ack/nack/reject
-		if (msg.body.toString().length > 10) {
+		if (msg.content.toString().length > 10) {
 			return channel.nack(msg);
 		}
 

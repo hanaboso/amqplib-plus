@@ -1,6 +1,6 @@
-const Connection = require("./../../dist/lib/Connection");
+const conn = require("./../../dist/lib/Connection");
 const CustomConsumer = require("./CustomConsumer");
-const SimpleConsumer = require("./../../dist/lib/SimpleConsumer");
+const simCons = require("./../../dist/lib/SimpleConsumer");
 
 const options = {
 	host: "localhost",
@@ -11,7 +11,7 @@ const options = {
 	heartbeat: 60,
 };
 
-const connection = new Connection(options);
+const connection = new conn.Connection(options);
 
 /*
  *
@@ -37,11 +37,11 @@ async function runSimpleConsumer() {
 		console.log("Message body:", msg.body.toString());
 	};
 
-	const simpleConsumer = new SimpleConsumer(connection, prepareConsumer, processDataSimply);
+	const simpleConsumer = new simCons.SimpleConsumer(connection, prepareConsumer, processDataSimply);
 	simpleConsumer.consume("source-simple-queue", {});
 }
 
-runSimpleConsumer();
+// runSimpleConsumer();
 
 /*
  *
