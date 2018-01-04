@@ -9,11 +9,11 @@ export abstract class Consumer extends Client {
 
     /**
      * Start consuming messages from queue
-     * Resolves promise when the consumption is ready
+     * Resolves promise when the consumption is ready and returns consumerTag string
      *
      * @return {Promise}
      */
-    public async consume(queue: string, options: Options.Consume): Promise<Replies.Consume> {
+    public async consume(queue: string, options: Options.Consume): Promise<string> {
         const fallback = () => this.consume(queue, options);
 
         const processFn = (msg: Message) => {
@@ -29,10 +29,23 @@ export abstract class Consumer extends Client {
 
         const consumeReply: Replies.Consume = await channel.consume(queue, processFn, options);
 
-        console.info(`Started consuming queue "${queue}". Consumption tag: ${consumeReply.consumerTag}`);
+        this.logger.info(`Started consuming queue "${queue}". Consumer tag: ${consumeReply.consumerTag}`);
 
-        return consumeReply;
+        return consumeReply.consumerTag;
 
+    }
+
+    /**
+     * Stops consuming messages
+     *
+     * @param {string} consumerTag
+     * @return {Promise<void>}
+     */
+    public async cancel(consumerTag: string): Promise<void> {
+        const channel: Channel = await this.channel;
+        await channel.cancel(consumerTag);
+
+        return;
     }
 
     /**

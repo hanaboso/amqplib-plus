@@ -46,7 +46,7 @@ export class Publisher extends Client implements IPublisher {
             return;
         }
 
-        console.warn("Could not publish message, is write stream full? Buffering.");
+        this.logger.warn("Could not publish message, is write stream full? Buffering.");
         this.drainBuffer.push({ exchange, routKey, content, options });
     }
 
@@ -88,7 +88,7 @@ export class Publisher extends Client implements IPublisher {
         const ch: Channel = await this.channel;
 
         ch.on("drain", () => {
-            console.warn(`AMQP channel Drain Event. Going to resend ${this.drainBuffer.length} messages`);
+            this.logger.warn(`AMQP channel Drain Event. Going to resend ${this.drainBuffer.length} messages`);
 
             this.cleanBuffer();
         });

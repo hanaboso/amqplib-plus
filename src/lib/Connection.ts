@@ -1,4 +1,6 @@
 import * as amqp from "amqplib";
+import DevNullLogger from "./DevNullLogger";
+import {ILogger} from "./ILogger";
 
 const WAIT_MS: number = 2000;
 const WAIT_MAX_MS: number = 300000; // 5 * 60 * 1000 = 5 min
@@ -19,6 +21,7 @@ export type createChannelCallback = (ch: amqp.Channel) => Promise<void>;
  */
 export class Connection {
 
+    private logger: ILogger;
     private connStr: string;
     private heartbeat: number;
     private connection: Promise<amqp.Connection>;
@@ -26,10 +29,15 @@ export class Connection {
     /**
      *
      * @param {IConnectionOptions} opts
+     * @param {ILogger} logger
      */
-    constructor(opts: IConnectionOptions) {
+    constructor(opts: IConnectionOptions, logger?: ILogger) {
         this.connStr = `amqp://${opts.user}:${opts.pass}@${opts.host}:${opts.port}${opts.vhost}`;
         this.heartbeat = opts.heartbeat;
+
+        if (!logger) {
+            this.logger = new DevNullLogger();
+        }
 
         this.connection = this.createConnection();
     }
@@ -51,7 +59,7 @@ export class Connection {
             const reconnect: (reason: any) => void = (reason) => {
                 const wait: number = Math.min(WAIT_MS * tryCount, WAIT_MAX_MS); // wait max 5 min
 
-                console.error(`Channel creation failed. Retry after ${wait} ms. Reason: ${reason}`);
+                this.logger.error(`Channel creation failed. Retry after ${wait} ms. Reason: ${reason}`);
 
                 setTimeout(tryConnect, wait);
                 tryCount += 1;
@@ -90,7 +98,7 @@ export class Connection {
 
                 const wait: number = Math.min(WAIT_MS * tryCount, WAIT_MAX_MS); // wait max 5 min
 
-                console.error(`RabbitMQ connection failure. Retry after ${wait} ms. Reason: ${error.message}`);
+                this.logger.error(`RabbitMQ connection failure. Retry after ${wait} ms. Reason: ${error.message}`);
 
                 setTimeout(tryConnect, wait);
                 tryCount += 1;
@@ -99,14 +107,14 @@ export class Connection {
             const tryConnect: () => void = () => amqp.connect(this.connStr, { heartbeat: this.heartbeat })
                 .then((connection) => {
                     connection.on("close", (error) => {
-                        console.warn("AMQP Connection closed", error ? error.message : "");
+                        this.logger.warn("AMQP Connection closed", error ? error.message : "");
                         this.connection = this.createConnection();
                     });
                     connection.on("error", (error) => {
-                        console.error("AMQP Connection error", error ? error.message : "");
+                        this.logger.error("AMQP Connection error", error ? error.message : "");
                         // will be handled by close event
                     });
-                    console.info("Connected to RabbitMQ.");
+                    this.logger.info("Connected to RabbitMQ.");
                     resolve(connection);
                 })
                 .catch(reconnect);

@@ -1,12 +1,12 @@
 {
   "name": "amqplib-plus",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Amqplib rabbitmq library enhancement.",
   "main": "./dist/src/Connection.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test ./node_modules/mocha/bin/mocha dist/test/**/*.test.js --recursive --reporter spec",
+    "test": "./node_modules/.bin/cross-env NODE_ENV=test ./node_modules/mocha/bin/mocha dist/test/**/*.test.js --recursive --reporter spec",
     "lint": "./node_modules/.bin/tslint ./src/**/*.ts ./test/**/*.ts",
-    "build": "tsc"
+    "build": "tsc -d"
   },
   "repository": {
     "type": "git",
@@ -28,11 +28,11 @@
   "devDependencies": {
     "@types/amqplib": "0.5.4",
     "@types/chai": "4.0.4",
-    "@types/core-js": "^0.9.43",
+    "@types/core-js": "^0.9.44",
     "@types/mocha": "2.2.43",
     "@types/node": "8.0.44",
     "chai": "3.5.0",
-    "core-js": "^2.5.1",
+    "core-js": "^2.5.3",
     "cross-env": "5.1.1",
     "jasmine": "2.8.0",
     "mocha": "3.5.2",

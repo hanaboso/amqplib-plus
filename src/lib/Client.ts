@@ -1,11 +1,14 @@
 import {Channel} from "amqplib";
 import { Connection, createChannelCallback } from "./Connection";
+import DevNullLogger from "./DevNullLogger";
+import {ILogger} from "./ILogger";
 
 /**
  * Abstract client connected to AMQP (can be publisher or consumer)
  */
 export abstract class Client {
 
+    protected logger: ILogger;
     protected conn: Connection;
     protected channel: Promise<Channel>;
 
@@ -15,10 +18,15 @@ export abstract class Client {
      *
      * @param {Connection} conn
      * @param {createChannelCallback} channelCallback
+     * @param {ILogger}logger
      */
-    public constructor(conn: Connection, channelCallback: createChannelCallback) {
+    public constructor(conn: Connection, channelCallback: createChannelCallback, logger?: ILogger) {
         this.conn = conn;
         this.channelCb = channelCallback;
+
+        if (!logger) {
+            this.logger = new DevNullLogger();
+        }
 
         this.openChannel();
     }
@@ -32,12 +40,12 @@ export abstract class Client {
         const ch: Channel = await this.channel;
 
         ch.on("close", (reason: any) => {
-            console.warn("Channel closed, Reason:", reason);
+            this.logger.warn("Channel closed, Reason:", reason);
             this.openChannel();
         });
 
         ch.on("error", (reason: any) => {
-            console.error("Channel error, Reason:", reason);
+            this.logger.error("Channel error, Reason:", reason);
             // will be handled by close event
         });
     }
