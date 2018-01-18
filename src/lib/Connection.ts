@@ -21,7 +21,6 @@ export type createChannelCallback = (ch: amqp.Channel) => Promise<void>;
  */
 export class Connection {
 
-    private logger: ILogger;
     private connStr: string;
     private heartbeat: number;
     private connection: Promise<amqp.Connection>;
@@ -31,7 +30,7 @@ export class Connection {
      * @param {IConnectionOptions} opts
      * @param {ILogger} logger
      */
-    constructor(opts: IConnectionOptions, logger?: ILogger) {
+    constructor(opts: IConnectionOptions, private logger?: ILogger) {
         this.connStr = `amqp://${opts.user}:${opts.pass}@${opts.host}:${opts.port}${opts.vhost}`;
         this.heartbeat = opts.heartbeat;
 
