@@ -46,8 +46,11 @@ export class Publisher extends Client implements IPublisher {
             return;
         }
 
-        this.logger.warn("Could not publish message, is write stream full? Buffering.");
-        this.drainBuffer.push({ exchange, routKey, content, options });
+        // TODO - amqplib is buffering messages on it's own too
+        // TODO - despite the publish() returns false, the message is sent
+        // TODO - we must somehow distinguish between false but accept AND false and not accepted messages
+        // this.logger.warn("Could not publish message, is write stream full? Buffering.");
+        // this.drainBuffer.push({ exchange, routKey, content, options });
     }
 
     /**

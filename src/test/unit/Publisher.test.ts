@@ -60,7 +60,8 @@ describe("Publisher", () => {
         assert.equal(publisher.cleanBuffer(), 0);
     });
 
-    it("should buffer messages and publish them when cleanBuffer is called", async () => {
+    // TODO - buffering of messages when published returned false is done on amqplib level
+    it.skip("should buffer messages and publish them when cleanBuffer is called", async () => {
         let i: number = 0;
         const limitedWriteStreamMock = () => {
             i++;

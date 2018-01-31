@@ -67,4 +67,30 @@ describe("Publish Consume", () => {
         }
     });
 
+    it("publish is able to publish many messages", (done) => {
+        const msgSent = 10000;
+        const testQueue = {
+            name: "test_queue_publish_many",
+            options: {},
+        };
+
+        let channel: Channel;
+        const publisherPrepare: any = async (ch: Channel) => {
+            channel = ch;
+            await ch.assertQueue(testQueue.name, testQueue.options);
+            await ch.purgeQueue(testQueue.name);
+        };
+
+        const publisher = new Publisher(conn, publisherPrepare);
+        for (let i = 0; i < msgSent; i++) {
+            publisher.sendToQueue(testQueue.name, new Buffer("some content"), {});
+        }
+
+        setTimeout(async () => {
+            const info = await channel.checkQueue(testQueue.name);
+            assert.equal(info.messageCount, msgSent);
+            done();
+        }, 10000);
+    }).timeout(11000);
+
 });
