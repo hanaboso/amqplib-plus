@@ -42,14 +42,20 @@ export class Publisher extends Client implements IPublisher {
         if (this.useConfirm) {
             const confChannel: any = await this.channel;
 
-            return await this.publishConfirm(confChannel, exchange, routKey, content, options);
+            try {
+                await this.publishConfirm(confChannel, exchange, routKey, content, options);
+            } catch (e) {
+                this.logger.warn(`Message could not be published with confirm. Error: ${e}`);
+            }
+
+            return;
         }
 
         const channel: Channel = await this.channel;
         const sent = channel.publish(exchange, routKey, content, options);
 
-        if (sent) {
-            return;
+        if (!sent) {
+            this.logger.warn(`Message could not be published.`);
         }
 
         // TODO - amqplib is buffering messages on it's own too
@@ -106,11 +112,12 @@ export class Publisher extends Client implements IPublisher {
     ): Promise<void> {
         return new Promise((resolve, reject) => {
             confChannel.publish(exchange, routKey, content, options, (err) => {
+                // console.log("publish confirm", err);
                 if (err !== null) {
                     return reject("Confirm Channel nacked publishing the message.");
                 }
 
-                return resolve();
+                return reject();
             });
         });
     }
