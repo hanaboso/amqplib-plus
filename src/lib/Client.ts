@@ -1,4 +1,4 @@
-import {Channel} from "amqplib";
+import {Channel, ConfirmChannel} from "amqplib";
 import { Connection, createChannelCallback } from "./Connection";
 import DevNullLogger from "./DevNullLogger";
 import {ILogger} from "./ILogger";
@@ -10,7 +10,8 @@ export abstract class Client {
 
     protected logger: ILogger;
     protected conn: Connection;
-    protected channel: Promise<Channel>;
+    protected channel: Promise<ConfirmChannel|Channel>;
+    protected useConfirm: boolean;
 
     private channelCb: createChannelCallback;
 
@@ -18,11 +19,18 @@ export abstract class Client {
      *
      * @param {Connection} conn
      * @param {createChannelCallback} channelCallback
+     * @param {boolean} useConfirmChannel
      * @param {ILogger}logger
      */
-    public constructor(conn: Connection, channelCallback: createChannelCallback, logger?: ILogger) {
+    public constructor(
+        conn: Connection,
+        channelCallback: createChannelCallback,
+        useConfirmChannel = false,
+        logger?: ILogger,
+    ) {
         this.conn = conn;
         this.channelCb = channelCallback;
+        this.useConfirm = useConfirmChannel;
 
         if (!logger) {
             this.logger = new DevNullLogger();
@@ -35,7 +43,7 @@ export abstract class Client {
      * creates new channel and runs callback function, e.g. to create queues, exchanges etc.
      */
     private async openChannel(): Promise<void> {
-        this.channel = this.conn.createChannel(this.channelCb);
+        this.channel = this.conn.createChannel(this.channelCb, this.useConfirm);
 
         const ch: Channel = await this.channel;
 

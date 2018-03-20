@@ -51,7 +51,10 @@ export class Connection {
     /**
      * Returns promise of channel with applied functions on the channel
      */
-    public createChannel(prepareFn: createChannelCallback): Promise<amqp.Channel> {
+    public createChannel(
+        prepareFn: createChannelCallback,
+        useConfirmChannel = true,
+    ): Promise<amqp.Channel|amqp.ConfirmChannel> {
         return new Promise((resolve) => {
             let tryCount: number = 1;
 
@@ -67,6 +70,9 @@ export class Connection {
             let channel: amqp.Channel;
             const tryConnect: () => void = () => this.connection
                 .then((connection) => {
+                    if (useConfirmChannel) {
+                        return connection.createConfirmChannel();
+                    }
                     return connection.createChannel();
                 })
                 .then((ch: amqp.Channel) => {

@@ -36,6 +36,32 @@ describe("Publish Consume", () => {
         publisher.sendToQueue(testQueue.name, new Buffer(testContent), {});
     });
 
+    it("should publish and consume single message using confirm channel", (done) => {
+        const useConfirmChannel = true;
+        const testQueue = {
+            name: "test_queue_single_confirm",
+            options: {},
+        };
+        const testContent = "test content";
+
+        const publisherPrepare: any = (ch: Channel) => {
+            return ch.assertQueue(testQueue.name, testQueue.options);
+        };
+        const consumerPrepare: any = (ch: Channel) => {
+            return ch.assertQueue(testQueue.name, testQueue.options);
+        };
+
+        const publisher = new Publisher(conn, publisherPrepare, useConfirmChannel);
+        const assertFn = (msg: Message) => {
+            assert.equal(msg.content.toString(), testContent);
+            done();
+        };
+        const consumer = new SimpleConsumer(conn, consumerPrepare, assertFn);
+
+        consumer.consume(testQueue.name, {});
+        publisher.sendToQueue(testQueue.name, new Buffer(testContent), {});
+    });
+
     it("should publish and consume multiple messages", (done) => {
         let msgReceived = 0;
         const msgSent = 5;

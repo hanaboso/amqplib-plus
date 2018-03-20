@@ -1,4 +1,4 @@
-import {Channel, Options} from "amqplib";
+import {Channel, ConfirmChannel, Options} from "amqplib";
 import {Client} from "./Client";
 import {Connection, createChannelCallback} from "./Connection";
 import {IPublisher} from "./IPublisher";
@@ -21,9 +21,10 @@ export class Publisher extends Client implements IPublisher {
      *
      * @param {Connection} conn
      * @param {createChannelCallback} channelCallback
+     * @param {boolean} useConfirmChannel
      */
-    public constructor(conn: Connection, channelCallback: createChannelCallback) {
-        super(conn, channelCallback);
+    public constructor(conn: Connection, channelCallback: createChannelCallback, useConfirmChannel = false) {
+        super(conn, channelCallback, useConfirmChannel);
         this.hookDrainEvent();
     }
 
@@ -38,8 +39,13 @@ export class Publisher extends Client implements IPublisher {
      * @return {Promise}
      */
     public async publish(exchange: string, routKey: string, content: Buffer, options: Options.Publish): Promise<void> {
-        const channel: Channel = await this.channel;
+        if (this.useConfirm) {
+            const confChannel: any = await this.channel;
 
+            return await this.publishConfirm(confChannel, exchange, routKey, content, options);
+        }
+
+        const channel: Channel = await this.channel;
         const sent = channel.publish(exchange, routKey, content, options);
 
         if (sent) {
@@ -80,6 +86,33 @@ export class Publisher extends Client implements IPublisher {
         }
 
         return reSent;
+    }
+
+    /**
+     *
+     * @param {ConfirmChannel} confChannel
+     * @param {string} exchange
+     * @param {string} routKey
+     * @param {Buffer} content
+     * @param {Options.Publish} options
+     * @return {Promise<void>}
+     */
+    private publishConfirm(
+        confChannel: ConfirmChannel,
+        exchange: string,
+        routKey: string,
+        content: Buffer,
+        options: Options.Publish,
+    ): Promise<void> {
+        return new Promise((resolve, reject) => {
+            confChannel.publish(exchange, routKey, content, options, (err) => {
+                if (err !== null) {
+                    return reject("Confirm Channel nacked publishing the message.");
+                }
+
+                return resolve();
+            });
+        });
     }
 
     /**
