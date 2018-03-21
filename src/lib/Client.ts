@@ -32,7 +32,9 @@ export abstract class Client {
         this.channelCb = channelCallback;
         this.useConfirm = useConfirmChannel;
 
-        if (!logger) {
+        if (logger) {
+            this.logger = logger;
+        } else {
             this.logger = new DevNullLogger();
         }
 
