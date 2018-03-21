@@ -1,6 +1,7 @@
 import {Channel, ConfirmChannel, Options} from "amqplib";
 import {Client} from "./Client";
 import {Connection, createChannelCallback} from "./Connection";
+import {ILogger} from "./ILogger";
 import {IPublisher} from "./IPublisher";
 
 interface IDrainBufferItem {
@@ -22,9 +23,15 @@ export class Publisher extends Client implements IPublisher {
      * @param {Connection} conn
      * @param {createChannelCallback} channelCallback
      * @param {boolean} useConfirmChannel
+     * @param {ILogger} logger
      */
-    public constructor(conn: Connection, channelCallback: createChannelCallback, useConfirmChannel = false) {
-        super(conn, channelCallback, useConfirmChannel);
+    public constructor(
+        conn: Connection,
+        channelCallback: createChannelCallback,
+        useConfirmChannel = false,
+        logger?: ILogger,
+    ) {
+        super(conn, channelCallback, useConfirmChannel, logger);
         this.hookDrainEvent();
     }
 
@@ -60,7 +67,7 @@ export class Publisher extends Client implements IPublisher {
 
         // TODO - amqplib is buffering messages on it's own too
         // TODO - despite the publish() returns false, the message is sent
-        // TODO - we must somehow distinguish between false but accept AND false and not accepted messages
+        // TODO - we must somehow distinguish between false but accepted AND false and not accepted
         // this.logger.warn("Could not publish message, is write stream full? Buffering.");
         // this.drainBuffer.push({ exchange, routKey, content, options });
     }
