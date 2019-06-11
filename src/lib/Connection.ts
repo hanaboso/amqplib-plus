@@ -12,6 +12,7 @@ export interface IConnectionOptions {
     port: number;
     vhost: string;
     heartbeat: number;
+    connectionString?: string;
 }
 
 export type createChannelCallback = (ch: amqp.Channel) => Promise<void>;
@@ -31,7 +32,12 @@ export class Connection {
      * @param {ILogger} logger
      */
     constructor(opts: IConnectionOptions, private logger?: ILogger) {
-        this.connStr = `amqp://${opts.user}:${opts.pass}@${opts.host}:${opts.port}${opts.vhost}`;
+        if (opts.connectionString) {
+            this.connStr = opts.connectionString;
+        } else {
+            this.connStr = `amqp://${opts.user}:${opts.pass}@${opts.host}:${opts.port}${opts.vhost}`;
+        }
+
         this.heartbeat = opts.heartbeat;
 
         if (!logger) {
