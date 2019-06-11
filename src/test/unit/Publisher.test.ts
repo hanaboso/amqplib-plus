@@ -27,7 +27,7 @@ describe("Publisher", () => {
         await publisher.publish(
             "some-ex",
             "rk",
-            new Buffer("test"),
+            Buffer.from("test"),
             { contentType: "text/plain", headers: { foo: "bar" }},
         );
 
@@ -52,7 +52,7 @@ describe("Publisher", () => {
 
         await publisher.sendToQueue(
             "queue-name",
-            new Buffer("test"),
+            Buffer.from("test"),
             { contentType: "text/plain", headers: { foo: "bar" }},
         );
 
@@ -77,9 +77,9 @@ describe("Publisher", () => {
         assert.equal(publisher.cleanBuffer(), 0);
 
         await Promise.all([
-            publisher.publish("exname", "routkey", new Buffer("content1"), {}),
-            publisher.sendToQueue("queue", new Buffer("content2"), {}),
-            publisher.publish("exname", "routkey", new Buffer("content3"), {}),
+            publisher.publish("exname", "routkey", Buffer.from("content1"), {}),
+            publisher.sendToQueue("queue", Buffer.from("content2"), {}),
+            publisher.publish("exname", "routkey", Buffer.from("content3"), {}),
         ]);
 
         assert.equal(publisher.cleanBuffer(), 3);

@@ -35,7 +35,7 @@ export class Connection {
         if (opts.connectionString) {
             this.connStr = opts.connectionString;
         } else {
-            this.connStr = `amqp://${opts.user}:${opts.pass}@${opts.host}:${opts.port}${opts.vhost}`;
+            this.connStr = `amqp://${opts.user}:${opts.pass}@${opts.host}:${opts.port}${opts.vhost || "/"}`;
         }
 
         this.heartbeat = opts.heartbeat || 60;
@@ -52,6 +52,13 @@ export class Connection {
      */
     public connect(): Promise<amqp.Connection> {
         return this.connection;
+    }
+
+    /**
+     * Retursn the actal connection string being used
+     */
+    public getConnectionString(): string {
+        return this.connStr;
     }
 
     /**

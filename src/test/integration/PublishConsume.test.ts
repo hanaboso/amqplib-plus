@@ -33,7 +33,7 @@ describe("Publish Consume", () => {
         const consumer = new SimpleConsumer(conn, consumerPrepare, assertFn);
 
         consumer.consume(testQueue.name, {});
-        publisher.sendToQueue(testQueue.name, new Buffer(testContent), {});
+        publisher.sendToQueue(testQueue.name, Buffer.from(testContent), {});
     });
 
     it("should publish and consume single message using confirm channel", (done) => {
@@ -59,7 +59,7 @@ describe("Publish Consume", () => {
         const consumer = new SimpleConsumer(conn, consumerPrepare, assertFn);
 
         consumer.consume(testQueue.name, {});
-        publisher.sendToQueue(testQueue.name, new Buffer(testContent), {});
+        publisher.sendToQueue(testQueue.name, Buffer.from(testContent), {});
     });
 
     it("should publish and consume multiple messages", (done) => {
@@ -89,7 +89,7 @@ describe("Publish Consume", () => {
 
         consumer.consume(testQueue.name, {});
         for (let i = 0; i < msgSent; i++) {
-            publisher.sendToQueue(testQueue.name, new Buffer("some content"), {});
+            publisher.sendToQueue(testQueue.name, Buffer.from("some content"), {});
         }
     });
 
@@ -109,7 +109,7 @@ describe("Publish Consume", () => {
 
         const publisher = new Publisher(conn, publisherPrepare);
         for (let i = 0; i < msgSent; i++) {
-            publisher.sendToQueue(testQueue.name, new Buffer("some content"), {});
+            publisher.sendToQueue(testQueue.name, Buffer.from("some content"), {});
         }
 
         setTimeout(async () => {
