@@ -6,13 +6,13 @@ const WAIT_MS: number = 2000;
 const WAIT_MAX_MS: number = 300000; // 5 * 60 * 1000 = 5 min
 
 export interface IConnectionOptions {
-    user: string;
-    pass: string;
-    host: string;
-    port: number;
-    vhost: string;
-    heartbeat: number;
     connectionString?: string;
+    user?: string;
+    pass?: string;
+    host?: string;
+    port?: number;
+    vhost?: string;
+    heartbeat?: number;
 }
 
 export type createChannelCallback = (ch: amqp.Channel) => Promise<void>;
@@ -38,7 +38,7 @@ export class Connection {
             this.connStr = `amqp://${opts.user}:${opts.pass}@${opts.host}:${opts.port}${opts.vhost}`;
         }
 
-        this.heartbeat = opts.heartbeat;
+        this.heartbeat = opts.heartbeat || 60;
 
         if (!logger) {
             this.logger = new DevNullLogger();
