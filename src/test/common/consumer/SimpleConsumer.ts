@@ -1,9 +1,11 @@
 import { Channel, Message } from "amqplib";
-import { Connection } from "./Connection";
-import { Consumer } from "./Consumer";
+import { Connection } from "../../../lib/Connection";
+import { Consumer } from "../../../lib/Consumer";
 
 /**
  * Example implementation of Consumer
+ * For real usage create your own class extending the Consumer class
+ * Use it in tests only
  *
  * Simple consumers automatically acks amqp message when consumed
  */
@@ -33,8 +35,12 @@ export class SimpleConsumer extends Consumer {
      * @param {Channel} channel
      */
     public processMessage(msg: Message, channel: Channel): void {
-        this.processData(msg);
-        channel.ack(msg);
+        try {
+            this.processData(msg);
+            channel.ack(msg);
+        } catch (e) {
+            channel.reject(msg);
+        }
     }
 
 }

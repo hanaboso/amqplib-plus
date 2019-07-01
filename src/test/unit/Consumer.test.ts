@@ -1,7 +1,7 @@
 import { Replies } from "amqplib/properties";
 import { Connection } from "../../lib/Connection";
 import { Consumer } from "../../lib/Consumer";
-import { SimpleConsumer } from "../../lib/SimpleConsumer";
+import { SimpleConsumer } from "../common/consumer/SimpleConsumer";
 import { rabbitMQOptions } from "../config";
 
 import { assert } from "chai";

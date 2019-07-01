@@ -12,12 +12,6 @@ Prepare function is called whenever the new instance is created and when auto-re
 
 On every connection auto-reconnect the prepare function of consumer is called, then the consume function is called too, so you do not have to bother with manual consumption regeneration after failures. 
 
-## Simple Consumer
-
-Is concrete implementation of Constructor class.
-Simple consumer automatically passes all received messages to given function and then acks them.
-Simple consumer simplifies the COnsumer maximally. You just process the message itself and you do not have to bother with acking it via Channel.
-
 ## Custom Consumer
 You can extend basic Consumer class to create your own consumer classes.
 You can see the example of custom consumer is in [CustomConsumer.js](CustomConsumer.js).
