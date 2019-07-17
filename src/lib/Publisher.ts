@@ -119,12 +119,11 @@ export class Publisher extends Client implements IPublisher {
     ): Promise<void> {
         return new Promise((resolve, reject) => {
             confChannel.publish(exchange, routKey, content, options, (err) => {
-                // console.log("publish confirm", err);
                 if (err !== null) {
                     return reject("Confirm Channel nacked publishing the message.");
                 }
 
-                return reject();
+                return resolve();
             });
         });
     }
