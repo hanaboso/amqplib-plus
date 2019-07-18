@@ -66,8 +66,18 @@ export class Connection {
      * Sets whether the connection should be automatically recreated when closed
      * @param should
      */
-    public shouldRecreateChannel(should: boolean) {
+    public shouldRecreateConnection(should: boolean) {
         this.recreateConnection = should;
+    }
+
+    /**
+     * Closes the connection
+     * Note: forces this.recreateChannel to be false
+     */
+    public async close(): Promise<void> {
+        this.shouldRecreateConnection(false);
+        const conn = await this.connection;
+        await conn.close();
     }
 
     /**
