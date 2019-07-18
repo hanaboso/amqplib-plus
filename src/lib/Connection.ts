@@ -25,6 +25,7 @@ export class Connection {
     private connStr: string;
     private heartbeat: number;
     private connection: Promise<amqp.Connection>;
+    private recreateConnection: boolean = true;
 
     /**
      *
@@ -59,6 +60,14 @@ export class Connection {
      */
     public getConnectionString(): string {
         return this.connStr;
+    }
+
+    /**
+     * Sets whether the connection should be automatically recreated when closed
+     * @param should
+     */
+    public shouldRecreateChannel(should: boolean) {
+        this.recreateConnection = should;
     }
 
     /**
@@ -126,7 +135,9 @@ export class Connection {
                 .then((connection) => {
                     connection.on("close", (error) => {
                         this.logger.warn("AMQP Connection closed", error ? error.message : "");
-                        this.connection = this.createConnection();
+                        if (this.recreateConnection) {
+                            this.connection = this.createConnection();
+                        }
                     });
                     connection.on("error", (error) => {
                         this.logger.error("AMQP Connection error", error ? error.message : "");

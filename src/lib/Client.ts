@@ -12,6 +12,7 @@ export abstract class Client {
     protected conn: Connection;
     protected channel: Promise<ConfirmChannel|Channel>;
     protected useConfirm: boolean;
+    protected recreateChannel: boolean = true;
 
     private channelCb: createChannelCallback;
 
@@ -42,6 +43,14 @@ export abstract class Client {
     }
 
     /**
+     * Sets whether the channel should be automatically recreated when closed
+     * @param should
+     */
+    public shouldRecreateChannel(should: boolean) {
+        this.recreateChannel = should;
+    }
+
+    /**
      * creates new channel and runs callback function, e.g. to create queues, exchanges etc.
      */
     private async openChannel(): Promise<void> {
@@ -51,7 +60,9 @@ export abstract class Client {
 
         ch.on("close", (reason: any) => {
             this.logger.warn("Channel closed, Reason:", reason);
-            this.openChannel();
+            if (this.recreateChannel) {
+                this.openChannel();
+            }
         });
 
         ch.on("error", (reason: any) => {
