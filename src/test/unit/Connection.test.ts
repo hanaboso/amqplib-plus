@@ -12,7 +12,7 @@ describe("Connection", () => {
 
     it("should accept connection options", async () => {
         const conn = new Connection({host: "rabbit", port: 5672, pass: "guest", user: "guest"});
-        assert.equal(conn.getConnectionString(), "amqp://guest:guest@rabbit:5672/");
+        assert.equal(conn.getConnectionString(), "amqp://guest:guest@rabbit:5672/?heartbeat=60");
     });
 
     it("should prefer connection string over options options", async () => {

@@ -23,7 +23,6 @@ export type createChannelCallback = (ch: amqp.Channel) => Promise<void>;
 export class Connection {
 
     private connStr: string;
-    private heartbeat: number;
     private connection: Promise<amqp.Connection>;
     private recreateConnection: boolean = true;
 
@@ -37,9 +36,8 @@ export class Connection {
             this.connStr = opts.connectionString;
         } else {
             this.connStr = `amqp://${opts.user}:${opts.pass}@${opts.host}:${opts.port}${opts.vhost || "/"}`;
+            this.connStr += `?heartbeat=${opts.heartbeat || 60}`;
         }
-
-        this.heartbeat = opts.heartbeat || 60;
 
         if (!logger) {
             this.logger = new DevNullLogger();
@@ -141,7 +139,7 @@ export class Connection {
                 tryCount += 1;
             };
 
-            const tryConnect: () => void = () => amqp.connect(this.connStr, { heartbeat: this.heartbeat })
+            const tryConnect: () => void = () => amqp.connect(this.connStr)
                 .then((connection) => {
                     connection.on("close", (error) => {
                         this.logger.warn("AMQP Connection closed", error ? error.message : "");

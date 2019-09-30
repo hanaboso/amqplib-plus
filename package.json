@@ -1,7 +1,7 @@
 {
   "name": "amqplib-plus",
-  "version": "0.0.26",
-  "description": "Amqplib rabbitmq library enhancement.",
+  "version": "0.0.27",
+  "description": "Amqplib rabbitmq library objet oriented enhancement.",
   "main": "./dist/src/Connection.js",
   "scripts": {
     "test": "./node_modules/.bin/cross-env NODE_ENV=test ./node_modules/mocha/bin/mocha dist/test/**/*.test.js --recursive --reporter spec --exit",
