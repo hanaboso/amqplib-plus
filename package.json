@@ -6,7 +6,8 @@
   "scripts": {
     "test": "./node_modules/.bin/cross-env NODE_ENV=test ./node_modules/mocha/bin/mocha dist/test/**/*.test.js --recursive --reporter spec --exit",
     "lint": "./node_modules/.bin/tslint ./src/**/*.ts ./test/**/*.ts",
-    "build": "tsc -d",
+    "build": "tsdx build",
+    "watch": "tsdx watch",
     "fulltest": "rm -rf ./dist && npm run build && npm run lint && npm run test"
   },
   "repository": {
@@ -24,8 +25,7 @@
   "contributors": [],
   "license": "ISC",
   "dependencies": {
-    "amqplib": "0.5.5",
-    "tsdx": "^0.9.3"
+    "amqplib": "0.5.5"
   },
   "devDependencies": {
     "@types/amqplib": "0.5.13",
@@ -41,6 +41,7 @@
     "ts-mockito": "2.2.5",
     "ts-node": "8.4.1",
     "tslint": "5.20.0",
+    "tsdx": "^0.9.3",
     "typescript": "3.6.2"
   }
 }
