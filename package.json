@@ -24,7 +24,8 @@
   "contributors": [],
   "license": "ISC",
   "dependencies": {
-    "amqplib": "0.5.5"
+    "amqplib": "0.5.5",
+    "tsdx": "^0.9.3"
   },
   "devDependencies": {
     "@types/amqplib": "0.5.13",
