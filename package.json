@@ -1,8 +1,13 @@
 {
-  "name": "amqplib-plus",
+  "name": "@tychota/amqplib-plus",
   "version": "0.0.27",
   "description": "Amqplib rabbitmq library objet oriented enhancement.",
-  "main": "./dist/src/Connection.js",
+  "main": "dist/index.js",
+  "module": "dist/amqplib-plus.esm.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "jest .",
     "lint": "tsdx lint",
