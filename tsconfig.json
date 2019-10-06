@@ -7,18 +7,11 @@
     "removeComments": false,
     "outDir": "dist/",
     "sourceMap": true,
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "declaration": true
+    "typeRoots": ["node_modules/@types"],
+    "declaration": true,
+    "noEmit": true
   },
   "compileOnSave": true,
-  "include": [
-    "src/lib/**/*",
-    "src/test/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "examples"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }
