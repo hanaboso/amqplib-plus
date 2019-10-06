@@ -1,4 +1,5 @@
 import * as amqp from "amqplib";
+
 import DevNullLogger from "./DevNullLogger";
 import { ILogger } from "./ILogger";
 

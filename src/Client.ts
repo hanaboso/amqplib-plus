@@ -1,4 +1,5 @@
 import { Channel, ConfirmChannel } from "amqplib";
+
 import { Connection, createChannelCallback } from "./Connection";
 import DevNullLogger from "./DevNullLogger";
 import { ILogger } from "./ILogger";
