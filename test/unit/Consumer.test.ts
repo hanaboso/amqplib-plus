@@ -1,13 +1,9 @@
 import { Replies } from "amqplib/properties";
 
 import { Connection } from "@src/Connection";
-import { Consumer } from "@src/Consumer";
 
 import { SimpleConsumer } from "../common/consumer/SimpleConsumer";
 import { rabbitMQOptions } from "../config";
-
-import { assert } from "chai";
-import "mocha";
 
 const conn = new Connection(rabbitMQOptions);
 
@@ -23,7 +19,7 @@ describe("Consumer", () => {
         return Promise.resolve({ consumerTag: "consumerTagValue" });
       },
       cancel: (consumerTag: string): Promise<void> => {
-        assert.equal(consumerTag, "consumerTagValue");
+        expect(consumerTag).toEqual("consumerTagValue");
         cancelCalled = true;
 
         return Promise.resolve();
@@ -40,7 +36,7 @@ describe("Consumer", () => {
     const tag = await consumer.consume("queue-name", {});
     await consumer.cancel(tag);
 
-    assert.isTrue(consumeCalled);
-    assert.isTrue(cancelCalled);
+    expect(consumeCalled).toBe(true);
+    expect(cancelCalled).toBe(true);
   });
 });

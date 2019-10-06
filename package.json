@@ -4,11 +4,10 @@
   "description": "Amqplib rabbitmq library objet oriented enhancement.",
   "main": "./dist/src/Connection.js",
   "scripts": {
-    "test": "./node_modules/.bin/cross-env NODE_ENV=test ./node_modules/mocha/bin/mocha dist/test/**/*.test.js --recursive --reporter spec --exit",
-    "lint": "./node_modules/.bin/tslint ./src/**/*.ts ./test/**/*.ts",
+    "test": "jest .",
+    "lint": "tsdx lint",
     "build": "tsdx build",
-    "watch": "tsdx watch",
-    "fulltest": "rm -rf ./dist && npm run build && npm run lint && npm run test"
+    "watch": "tsdx watch"
   },
   "repository": {
     "type": "git",
@@ -29,19 +28,20 @@
   },
   "devDependencies": {
     "@types/amqplib": "0.5.13",
-    "@types/chai": "4.0.4",
     "@types/core-js": "^0.9.46",
-    "@types/mocha": "2.2.43",
+    "@types/jest": "^24.0.18",
     "@types/node": "12.7.8",
-    "chai": "3.5.0",
+    "@typescript-eslint/eslint-plugin": "^2.3.2",
+    "@typescript-eslint/parser": "^2.3.2",
     "core-js": "^2.6.9",
     "cross-env": "5.1.1",
-    "jasmine": "2.8.0",
-    "mocha": "^6.2.1",
-    "ts-mockito": "2.2.5",
+    "eslint": "^6.5.1",
+    "eslint-config-react-app": "^5.0.2",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.1.0",
     "ts-node": "8.4.1",
-    "tslint": "5.20.0",
     "tsdx": "^0.9.3",
+    "tslint": "5.20.0",
     "typescript": "3.6.2"
   }
 }
