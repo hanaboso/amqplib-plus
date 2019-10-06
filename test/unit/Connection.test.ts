@@ -1,14 +1,11 @@
 import { Connection } from "@src/Connection";
 
-import { assert } from "chai";
-import "mocha";
-
 describe("Connection", () => {
   it("should accept connection string", async () => {
     const conn = new Connection({
       connectionString: "amqp://rabbit:5672/root"
     });
-    assert.equal(conn.getConnectionString(), "amqp://rabbit:5672/root");
+    expect(conn.getConnectionString()).toEqual("amqp://rabbit:5672/root");
   });
 
   it("should accept connection options", async () => {
@@ -18,8 +15,7 @@ describe("Connection", () => {
       pass: "guest",
       user: "guest"
     });
-    assert.equal(
-      conn.getConnectionString(),
+    expect(conn.getConnectionString()).toEqual(
       "amqp://guest:guest@rabbit:5672/?heartbeat=60"
     );
   });
@@ -30,6 +26,6 @@ describe("Connection", () => {
       port: 5672,
       connectionString: "amqp://rabbit:5672/root"
     });
-    assert.equal(conn.getConnectionString(), "amqp://rabbit:5672/root");
+    expect(conn.getConnectionString()).toEqual("amqp://rabbit:5672/root");
   });
 });
