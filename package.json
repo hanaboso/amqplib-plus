@@ -1,6 +1,6 @@
 {
   "name": "amqplib-plus",
-  "version": "0.0.27",
+  "version": "1.0.0",
   "description": "Amqplib rabbitmq library objet oriented enhancement.",
   "main": "dist/index.js",
   "module": "dist/amqplib-plus.esm.js",
