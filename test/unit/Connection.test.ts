@@ -6,6 +6,7 @@ describe("Connection", () => {
       connectionString: "amqp://rabbit:5672/root"
     });
     expect(conn.getConnectionString()).toEqual("amqp://rabbit:5672/root");
+    conn.close();
   });
 
   it("should accept connection options", async () => {
@@ -18,6 +19,7 @@ describe("Connection", () => {
     expect(conn.getConnectionString()).toEqual(
       "amqp://guest:guest@rabbit:5672/?heartbeat=60"
     );
+    conn.close();
   });
 
   it("should prefer connection string over options options", async () => {
@@ -27,5 +29,6 @@ describe("Connection", () => {
       connectionString: "amqp://rabbit:5672/root"
     });
     expect(conn.getConnectionString()).toEqual("amqp://rabbit:5672/root");
+    conn.close();
   });
 });
