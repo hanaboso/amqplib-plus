@@ -2,9 +2,17 @@ import { Connection } from "@src/Connection";
 import { Publisher } from "@src/Publisher";
 import { rabbitMQOptions } from "../config";
 
-const conn = new Connection(rabbitMQOptions);
-
 describe("Publisher", () => {
+  let conn: Connection;
+
+  beforeAll(() => {
+    conn = new Connection(rabbitMQOptions);
+  });
+
+  afterAll(() => {
+    conn.close();
+  });
+
   it("should publish message", async () => {
     const channelMock: any = {
       publish: (
@@ -66,32 +74,6 @@ describe("Publisher", () => {
     });
 
     // nothing should have been buffered
-    expect(publisher.cleanBuffer()).toBe(0);
-  });
-
-  // TODO - buffering of messages when published returned false is done on amqplib level
-  it.skip("should buffer messages and publish them when cleanBuffer is called", async () => {
-    let i: number = 0;
-    const limitedWriteStreamMock = () => {
-      i++;
-      return i > 3;
-    };
-    const channelMock: any = {
-      publish: () => limitedWriteStreamMock(),
-      on: () => false
-    };
-    conn.createChannel = async () => channelMock;
-
-    const publisher = new Publisher(conn, () => Promise.resolve());
-    expect(publisher.cleanBuffer()).toBe(0);
-
-    await Promise.all([
-      publisher.publish("exname", "routkey", Buffer.from("content1"), {}),
-      publisher.sendToQueue("queue", Buffer.from("content2"), {}),
-      publisher.publish("exname", "routkey", Buffer.from("content3"), {})
-    ]);
-
-    expect(publisher.cleanBuffer()).toBe(3);
     expect(publisher.cleanBuffer()).toBe(0);
   });
 });

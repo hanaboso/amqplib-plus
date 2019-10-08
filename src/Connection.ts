@@ -131,11 +131,6 @@ export class Connection {
       let tryCount = 1;
 
       const reconnect: (error: any) => void = error => {
-        /* try forever
-                if (tryCount >= (WAIT_MAX_MS / WAIT_MS) + WAIT_LIMIT) { // 5 min + 2 h
-                  reject(`Maximum (${tryCount}) reconnection attempts reached.`);
-                }*/
-
         const wait: number = Math.min(WAIT_MS * tryCount, WAIT_MAX_MS); // wait max 5 min
 
         this.logger.error(

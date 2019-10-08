@@ -1,5 +1,5 @@
 {
-  "name": "@tychota/amqplib-plus",
+  "name": "amqplib-plus",
   "version": "0.0.27",
   "description": "Amqplib rabbitmq library objet oriented enhancement.",
   "main": "dist/index.js",
@@ -26,7 +26,9 @@
     "publisher"
   ],
   "author": "Tomas Sedlacek <mail@kedlas.cz>",
-  "contributors": [],
+  "contributors": [
+    "Tycho Tatitscheff <https://github.com/tychota>"
+  ],
   "license": "ISC",
   "dependencies": {
     "amqplib": "0.5.5"

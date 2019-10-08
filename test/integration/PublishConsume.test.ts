@@ -6,15 +6,19 @@ import { Publisher } from "@src/Publisher";
 import { SimpleConsumer } from "../common/consumer/SimpleConsumer";
 import { rabbitMQOptions } from "../config";
 
-const conn = new Connection(rabbitMQOptions);
+describe("Publish Consume", () => {
+  let conn: Connection;
 
-// TODO fix integration test
-xdescribe("Publish Consume", () => {
+  beforeAll(() => {
+    conn = new Connection(rabbitMQOptions);
+  });
+
+  afterAll(() => {
+    conn.close();
+  });
+
   it("should publish and consume single message", done => {
-    const testQueue = {
-      name: "test_queue_single",
-      options: {}
-    };
+    const testQueue = { name: "test_queue_single", options: {} };
     const testContent = "test content";
 
     const publisherPrepare: any = (ch: Channel) => {
@@ -37,10 +41,7 @@ xdescribe("Publish Consume", () => {
 
   it("should publish and consume single message using confirm channel", done => {
     const useConfirmChannel = true;
-    const testQueue = {
-      name: "test_queue_single_confirm",
-      options: {}
-    };
+    const testQueue = { name: "test_queue_single_confirm", options: {} };
     const testContent = "test content";
 
     const publisherPrepare: any = (ch: Channel) => {
@@ -64,10 +65,7 @@ xdescribe("Publish Consume", () => {
   it("should publish and consume multiple messages", done => {
     let msgReceived = 0;
     const msgSent = 5;
-    const testQueue = {
-      name: "test_queue_multiple",
-      options: {}
-    };
+    const testQueue = { name: "test_queue_multiple", options: {} };
 
     const publisherPrepare: any = (ch: Channel) => {
       return ch.assertQueue(testQueue.name, testQueue.options);
@@ -92,12 +90,9 @@ xdescribe("Publish Consume", () => {
     }
   });
 
-  it("publish is able to publish many messages", done => {
+  xit("publish is able to publish many messages and no one is skiped", done => {
     const msgSent = 10000;
-    const testQueue = {
-      name: "test_queue_publish_many",
-      options: {}
-    };
+    const testQueue = { name: "test_queue_publish_many", options: {} };
 
     let channel: Channel;
     const publisherPrepare: any = async (ch: Channel) => {

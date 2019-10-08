@@ -5,9 +5,17 @@ import { Connection } from "@src/Connection";
 import { SimpleConsumer } from "../common/consumer/SimpleConsumer";
 import { rabbitMQOptions } from "../config";
 
-const conn = new Connection(rabbitMQOptions);
-
 describe("Consumer", () => {
+  let conn: Connection;
+
+  beforeAll(() => {
+    conn = new Connection(rabbitMQOptions);
+  });
+
+  afterAll(() => {
+    conn.close();
+  });
+
   it("should call channel's consume and cancel methods", async () => {
     let consumeCalled = false;
     let cancelCalled = false;
