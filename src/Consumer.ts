@@ -18,12 +18,11 @@ export abstract class Consumer extends Client {
     options: Options.Consume
   ): Promise<string> {
     const fallback = () => this.consume(queue, options);
+    const channel: Channel = await this.channel;
 
     const processFn = (msg: Message) => {
       this.processMessage(msg, channel);
     };
-
-    const channel: Channel = await this.channel;
 
     channel.on("close", () => {
       // Wait a while until new connection is established and the start consumption again
