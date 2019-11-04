@@ -1,5 +1,5 @@
 import { Channel } from "amqplib";
-import { Message, Options, Replies } from "amqplib/properties";
+import { Message, Options, Replies } from "amqplib";
 
 import { Client } from "./Client";
 
