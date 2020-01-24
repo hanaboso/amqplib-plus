@@ -14,9 +14,10 @@ Amqplib-plus adds following features:
 
 ### Basic example - publish and consume
 
-```javascript
+```typescript
 import {Connection, Consumer, Publisher} from "amqplib-plus";
 import {Channel, Message} from "amqplib";
+import {CustomConsumer} from "./CustomConsumer"; // CustomConsumer is your own consumer implementation that extends amqplib-plus Consumer 
 
 const queue = { name: "some_queue_name", options: {} };
 const msgContent = "some content";
@@ -41,7 +42,7 @@ const amqpConn = new Connection(
 );
 
 // create the consumer using existing connection and start the consumption
-const consumer = new Consumer(conn, consumerPrepare, handleMsg);
+const consumer = new CustomConsumer(conn, consumerPrepare, handleMsg);
 consumer.consume(queue.name, {});
 
 
