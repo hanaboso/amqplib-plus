@@ -45,6 +45,8 @@
     "eslint": "^6.8.0",
     "eslint-config-react-app": "^5.2.1",
     "jest": "^25.5.2",
+    "kind-of": "^6.0.3",
+    "minimist": "^0.2.1",
     "ts-jest": "^25.4.0",
     "ts-node": "^8.9.1",
     "tsdx": "^0.13.2",
