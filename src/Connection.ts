@@ -22,8 +22,9 @@ export type createChannelCallback = (ch: amqp.Channel) => Promise<void>;
  * Logical wrap for AMQP connection
  */
 export class Connection {
-  private connStr: string;
+  private readonly connStr: string;
   private connection: Promise<amqp.Connection>;
+  private channel: amqp.Channel;
   private recreateConnection: boolean = true;
 
   /**
@@ -85,14 +86,15 @@ export class Connection {
    */
   public createChannel(
     prepareFn: createChannelCallback,
-    useConfirmChannel = true
+    useConfirmChannel = true,
+    reuseChannel = true
   ): Promise<amqp.Channel | amqp.ConfirmChannel> {
     return new Promise(resolve => {
       let tryCount: number = 1;
 
       const reconnect: (reason: any) => void = reason => {
         const wait: number = Math.min(WAIT_MS * tryCount, WAIT_MAX_MS); // wait max 5 min
-
+        this.channel = null;
         this.logger.error(
           `Channel creation failed. Retry after ${wait} ms. Reason: ${reason}`
         );
@@ -101,21 +103,24 @@ export class Connection {
         tryCount += 1;
       };
 
-      let channel: amqp.Channel;
       const tryConnect: () => void = () =>
         this.connection
           .then(connection => {
+            if (reuseChannel && this.channel) {
+              return this.channel;
+            }
+
             if (useConfirmChannel) {
               return connection.createConfirmChannel();
             }
             return connection.createChannel();
           })
           .then((ch: amqp.Channel) => {
-            channel = ch;
+            this.channel = ch;
             return prepareFn(ch);
           })
           .then(() => {
-            return resolve(channel);
+            return resolve(this.channel);
           })
           .catch(reconnect);
 

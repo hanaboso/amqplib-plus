@@ -13,5 +13,9 @@ test:
 	$(DE) npm run build
 	$(DE) npm test
 
+fast-test:
+	$(DE) npm run build
+	$(DE) npm test
+
 install:
 	$(DE) yarn install

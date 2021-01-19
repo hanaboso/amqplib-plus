@@ -13,6 +13,7 @@ export abstract class Client {
   protected channel: Promise<ConfirmChannel | Channel>;
   protected useConfirm: boolean;
   protected recreateChannel: boolean = true;
+  protected reuseChannel: boolean;
 
   private channelCb: createChannelCallback;
 
@@ -22,16 +23,19 @@ export abstract class Client {
    * @param {createChannelCallback} channelCallback
    * @param {boolean} useConfirmChannel
    * @param {ILogger}logger
+   * @param {boolean}reuseChannel
    */
   public constructor(
     conn: Connection,
     channelCallback: createChannelCallback,
     useConfirmChannel = false,
-    logger?: ILogger
+    logger?: ILogger,
+    reuseChannel: boolean = false
   ) {
     this.conn = conn;
     this.channelCb = channelCallback;
     this.useConfirm = useConfirmChannel;
+    this.reuseChannel = reuseChannel;
 
     if (logger) {
       this.logger = logger;
@@ -39,7 +43,7 @@ export abstract class Client {
       this.logger = new DevNullLogger();
     }
 
-    this.openChannel();
+    this.openChannel(reuseChannel);
   }
 
   /**
@@ -53,15 +57,15 @@ export abstract class Client {
   /**
    * creates new channel and runs callback function, e.g. to create queues, exchanges etc.
    */
-  private async openChannel(): Promise<void> {
-    this.channel = this.conn.createChannel(this.channelCb, this.useConfirm);
+  private async openChannel(reuseChannel: boolean): Promise<void> {
+    this.channel = this.conn.createChannel(this.channelCb, this.useConfirm, reuseChannel);
 
     const ch: Channel = await this.channel;
 
     ch.on("close", (reason: any) => {
       this.logger.warn("Channel closed, Reason:", reason);
       if (this.recreateChannel) {
-        this.openChannel();
+        this.openChannel(false);
       }
     });
 
