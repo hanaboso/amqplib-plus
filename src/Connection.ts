@@ -1,10 +1,20 @@
 import * as amqp from "amqplib";
+import fs from 'fs';
+import path from 'path';
 
 import DevNullLogger from "./DevNullLogger";
 import { ILogger } from "./ILogger";
 
 const WAIT_MS: number = 2000;
 const WAIT_MAX_MS: number = 300000; // 5 * 60 * 1000 = 5 min
+
+export interface IConnectionSSLOptions {
+  cert?: string;
+  key?: string;
+  pfx?: string;
+  passphrase?: string;
+  ca?: string;
+}
 
 export interface IConnectionOptions {
   connectionString?: string;
@@ -14,6 +24,7 @@ export interface IConnectionOptions {
   port?: number;
   vhost?: string;
   heartbeat?: number;
+  ssl?: IConnectionSSLOptions;
 }
 
 export type createChannelCallback = (ch: amqp.Channel) => Promise<void>;
@@ -23,6 +34,7 @@ export type createChannelCallback = (ch: amqp.Channel) => Promise<void>;
  */
 export class Connection {
   private readonly connStr: string;
+  private readonly sslOptions: object;
   private connection: Promise<amqp.Connection>;
   private channel: amqp.Channel;
   private recreateConnection: boolean = true;
@@ -40,6 +52,23 @@ export class Connection {
         opts.port
       }${opts.vhost || "/"}`;
       this.connStr += `?heartbeat=${opts.heartbeat || 60}`;
+    }
+
+    if(opts.ssl){
+      if(opts.ssl.pfx){
+        this.sslOptions = {
+          pfx: fs.promises.readFile(path.resolve(__dirname, '..', 'certs', opts.ssl.pfx)),
+          passphrase: opts.ssl.passphrase ?? undefined,
+          ca: [fs.promises.readFile(path.resolve(__dirname, '..', 'certs', opts.ssl.ca))]
+        }
+      } else {
+        this.sslOptions = {
+          cert: fs.promises.readFile(path.resolve(__dirname, '..', 'certs', opts.ssl.cert)),
+          key: fs.promises.readFile(path.resolve(__dirname, '..', 'certs', opts.ssl.key)),
+          passphrase: opts.ssl.passphrase ?? undefined,
+          ca: [fs.promises.readFile(path.resolve(__dirname, '..', 'certs', opts.ssl.ca))]
+        }
+      }      
     }
 
     if (!logger) {
@@ -61,6 +90,10 @@ export class Connection {
    */
   public getConnectionString(): string {
     return this.connStr;
+  }
+
+  public getSSLOptions(): object {
+    return this.sslOptions;
   }
 
   /**
@@ -148,7 +181,7 @@ export class Connection {
 
       const tryConnect: () => void = () =>
         amqp
-          .connect(this.connStr)
+          .connect(this.connStr, this.sslOptions)
           .then(connection => {
             connection.on("close", error => {
               this.logger.warn(
