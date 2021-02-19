@@ -1,4 +1,6 @@
 import { Connection } from "@src/Connection";
+import fs from 'fs';
+import path from 'path';
 
 describe("Connection", () => {
   it("should accept connection string", async () => {
@@ -33,14 +35,16 @@ describe("Connection", () => {
   });
 
   it("should accept ssl options to connect", async () => {
+    const mockFile = "123";
+
     const opts = {
-      cert: 'cert.pem',
-      key: 'key.pem',
+      cert: Buffer.from(mockFile),
+      key: Buffer.from(mockFile),
       passphrase: '123',
-      ca: 'ca.pem'
+      ca: Buffer.from(mockFile)
     }
     const conn = new Connection({
-      connectionString: "amqp://rabbit:5672/root",
+      connectionString: "amqps://rabbit:5671",
       ssl: opts
     });
 
