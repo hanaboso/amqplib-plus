@@ -9,11 +9,11 @@ const WAIT_MS: number = 2000;
 const WAIT_MAX_MS: number = 300000; // 5 * 60 * 1000 = 5 min
 
 export interface IConnectionSSLOptions {
-  cert?: string;
-  key?: string;
-  pfx?: string;
+  cert?: Buffer;
+  key?: Buffer;
+  pfx?: Buffer;
   passphrase?: string;
-  ca?: string;
+  ca?: Buffer;
 }
 
 export interface IConnectionOptions {
@@ -57,16 +57,16 @@ export class Connection {
     if(opts.ssl){
       if(opts.ssl.pfx){
         this.sslOptions = {
-          pfx: fs.promises.readFile(path.resolve(__dirname, '..', 'certs', opts.ssl.pfx)),
+          pfx: opts.ssl.pfx,
           passphrase: opts.ssl.passphrase ?? undefined,
-          ca: [fs.promises.readFile(path.resolve(__dirname, '..', 'certs', opts.ssl.ca))]
+          ca: [opts.ssl.ca]
         }
       } else {
         this.sslOptions = {
-          cert: fs.promises.readFile(path.resolve(__dirname, '..', 'certs', opts.ssl.cert)),
-          key: fs.promises.readFile(path.resolve(__dirname, '..', 'certs', opts.ssl.key)),
+          cert: opts.ssl.cert,
+          key: opts.ssl.key,
           passphrase: opts.ssl.passphrase ?? undefined,
-          ca: [fs.promises.readFile(path.resolve(__dirname, '..', 'certs', opts.ssl.ca))]
+          ca: [opts.ssl.ca]
         }
       }      
     }
