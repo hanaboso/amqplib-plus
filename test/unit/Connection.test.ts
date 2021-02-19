@@ -31,4 +31,20 @@ describe("Connection", () => {
     expect(conn.getConnectionString()).toEqual("amqp://rabbit:5672/root");
     conn.close();
   });
+
+  it("should accept ssl options to connect", async () => {
+    const opts = {
+      cert: 'cert.pem',
+      key: 'key.pem',
+      passphrase: '123',
+      ca: 'ca.pem'
+    }
+    const conn = new Connection({
+      connectionString: "amqp://rabbit:5672/root",
+      ssl: opts
+    });
+
+    expect(conn.getSSLOptions()).toBeDefined();
+    conn.close();
+  });
 });

@@ -4,3 +4,4 @@ node_modules
 dist
 src/**/*.js
 .rts2_cache_*
+certs
