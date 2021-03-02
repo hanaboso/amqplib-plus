@@ -9,11 +9,11 @@ describe("Publisher", () => {
     conn = new Connection(rabbitMQOptions);
   });
 
-  afterAll(() => {
-    conn.close();
+  afterAll(async () => {
+    await conn.close();
   });
 
-  it("should publish message", async () => {
+  it("should publish message", async (done) => {
     const channelMock: any = {
       publish: (
         exchange: string,
@@ -31,7 +31,8 @@ describe("Publisher", () => {
 
         return true;
       },
-      on: () => false
+      on: () => false,
+      listenerCount: () => 0
     };
     conn.createChannel = async () => channelMock;
     const publisher = new Publisher(conn, () => Promise.resolve());
@@ -43,9 +44,10 @@ describe("Publisher", () => {
 
     // nothing should have been buffered
     expect(publisher.cleanBuffer()).toBe(0);
-  });
+    done();
+  }, 2000);
 
-  it("should send message to queue", async () => {
+  it("should send message to queue", async (done) => {
     const channelMock: any = {
       publish: (
         exchange: string,
@@ -63,7 +65,8 @@ describe("Publisher", () => {
 
         return true;
       },
-      on: () => false
+      on: () => false,
+      listenerCount: () => 0
     };
     conn.createChannel = async () => channelMock;
     const publisher = new Publisher(conn, () => Promise.resolve());
@@ -75,5 +78,6 @@ describe("Publisher", () => {
 
     // nothing should have been buffered
     expect(publisher.cleanBuffer()).toBe(0);
-  });
+    done();
+  }, 2000);
 });

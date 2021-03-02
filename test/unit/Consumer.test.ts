@@ -12,11 +12,11 @@ describe("Consumer", () => {
     conn = new Connection(rabbitMQOptions);
   });
 
-  afterAll(() => {
-    conn.close();
+  afterAll(async () => {
+    await conn.close();
   });
 
-  it("should call channel's consume and cancel methods", async () => {
+  it("should call channel's consume and cancel methods", async (done) => {
     let consumeCalled = false;
     let cancelCalled = false;
 
@@ -32,7 +32,8 @@ describe("Consumer", () => {
 
         return Promise.resolve();
       },
-      on: () => false
+      on: () => false,
+      listenerCount: () => 0
     };
     conn.createChannel = async () => channelMock;
     const consumer = new SimpleConsumer(
@@ -46,5 +47,6 @@ describe("Consumer", () => {
 
     expect(consumeCalled).toBe(true);
     expect(cancelCalled).toBe(true);
-  });
+    done();
+  }, 2000);
 });

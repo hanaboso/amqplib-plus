@@ -62,16 +62,19 @@ export abstract class Client {
 
     const ch: Channel = await this.channel;
 
-    ch.on("close", (reason: any) => {
-      this.logger.warn("Channel closed, Reason:", reason);
-      if (this.recreateChannel) {
-        this.openChannel(false);
-      }
-    });
-
-    ch.on("error", (reason: any) => {
-      this.logger.error("Channel error, Reason:", reason);
-      // will be handled by close event
-    });
+    if (ch.listenerCount("close") < 2 || !reuseChannel) {
+      ch.on("close", (reason: any) => {
+        this.logger.warn("Channel closed, Reason:", reason);
+        if (this.recreateChannel) {
+          this.openChannel(false);
+        }
+      });
+    }
+    if (ch.listenerCount("error") < 1 || !reuseChannel) {
+      ch.on("error", (reason: any) => {
+        this.logger.error("Channel error, Reason:", reason);
+        // will be handled by close event
+      });
+    }
   }
 }

@@ -90,8 +90,8 @@ describe("Publish Consume", () => {
     }
   });
 
-  xit("publish is able to publish many messages and no one is skiped", done => {
-    const msgSent = 10000;
+  xit("publish is able to publish many messages and no one is skipped", done => {
+    const msgSent = 1000;
     const testQueue = { name: "test_queue_publish_many", options: {} };
 
     let channel: Channel;
@@ -110,6 +110,6 @@ describe("Publish Consume", () => {
       const info = await channel.checkQueue(testQueue.name);
       expect(info.messageCount).toBe(msgSent);
       done();
-    }, 10000);
+    }, 5000);
   }, 11000);
 });
