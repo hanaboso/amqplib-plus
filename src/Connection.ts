@@ -74,6 +74,7 @@ export class Connection {
     }
 
     this.connection = this.createConnection();
+    this.channel = null;
   }
 
   /**
@@ -137,7 +138,7 @@ export class Connection {
       const tryConnect: () => void = () =>
         this.connection
           .then(connection => {
-            if (reuseChannel && this.channel) {
+            if (reuseChannel && this.channel !== null) {
               return this.channel;
             }
 
