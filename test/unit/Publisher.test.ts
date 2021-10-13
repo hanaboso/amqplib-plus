@@ -13,7 +13,7 @@ describe("Publisher", () => {
     await conn.close();
   });
 
-  it("should publish message", async (done) => {
+  it("should publish message", async () => {
     const channelMock: any = {
       publish: (
         exchange: string,
@@ -44,10 +44,10 @@ describe("Publisher", () => {
 
     // nothing should have been buffered
     expect(publisher.cleanBuffer()).toBe(0);
-    done();
-  }, 2000);
+    return Promise.resolve();
+  });
 
-  it("should send message to queue", async (done) => {
+  it("should send message to queue", async () => {
     const channelMock: any = {
       publish: (
         exchange: string,
@@ -78,6 +78,5 @@ describe("Publisher", () => {
 
     // nothing should have been buffered
     expect(publisher.cleanBuffer()).toBe(0);
-    done();
-  }, 2000);
+  });
 });

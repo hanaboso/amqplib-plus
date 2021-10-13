@@ -17,7 +17,7 @@ describe("Publish Consume", () => {
     conn.close();
   });
 
-  it("should publish and consume single message", done => {
+  it("should publish and consume single message", (done) => {
     const testQueue = { name: "test_queue_single", options: {} };
     const testContent = "test content";
 
@@ -39,7 +39,7 @@ describe("Publish Consume", () => {
     publisher.sendToQueue(testQueue.name, Buffer.from(testContent), {});
   });
 
-  it("should publish and consume single message using confirm channel", done => {
+  it("should publish and consume single message using confirm channel", (done) => {
     const useConfirmChannel = true;
     const testQueue = { name: "test_queue_single_confirm", options: {} };
     const testContent = "test content";
@@ -62,7 +62,7 @@ describe("Publish Consume", () => {
     publisher.sendToQueue(testQueue.name, Buffer.from(testContent), {});
   });
 
-  it("should publish and consume multiple messages", done => {
+  it("should publish and consume multiple messages", (done) => {
     let msgReceived = 0;
     const msgSent = 5;
     const testQueue = { name: "test_queue_multiple", options: {} };
@@ -90,7 +90,7 @@ describe("Publish Consume", () => {
     }
   });
 
-  xit("publish is able to publish many messages and no one is skipped", done => {
+  it("publish is able to publish many messages and no one is skipped", (done) => {
     const msgSent = 1000;
     const testQueue = { name: "test_queue_publish_many", options: {} };
 

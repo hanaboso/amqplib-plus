@@ -10,7 +10,7 @@ import { ILogger } from "./ILogger";
 export abstract class Client {
   protected logger: ILogger;
   protected conn: Connection;
-  protected channel: Promise<ConfirmChannel | Channel>;
+  protected channel?: Promise<ConfirmChannel | Channel>;
   protected useConfirm: boolean;
   protected recreateChannel: boolean = true;
   protected reuseChannel: boolean;

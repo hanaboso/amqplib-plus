@@ -1,41 +1,41 @@
 import { Connection } from "@src/Connection";
 
 describe("Connection", () => {
-  it("should accept connection string", async (done) => {
-    const conn = new Connection({
-      connectionString: "amqp://rabbit:5672/root"
-    });
-    expect(conn.getConnectionString()).toEqual("amqp://rabbit:5672/root");
-    conn.close();
-    done();
-  }, 2000);
+  let conn: Connection;
 
-  it("should accept connection options", async (done) => {
-    const conn = new Connection({
-      host: "rabbit",
+  afterEach( () => {
+    conn.close();
+  })
+
+  it("should accept connection string", () => {
+     conn = new Connection({
+      connectionString: "amqp://rabbitmq:5672"
+    });
+    expect(conn.getConnectionString()).toEqual("amqp://rabbitmq:5672");
+  });
+
+  it("should accept connection options",  () => {
+    conn = new Connection({
+      host: "rabbitmq",
       port: 5672,
       pass: "guest",
       user: "guest"
     });
     expect(conn.getConnectionString()).toEqual(
-      "amqp://guest:guest@rabbit:5672/?heartbeat=60"
+      "amqp://guest:guest@rabbitmq:5672/?heartbeat=60"
     );
-    conn.close();
-    done();
-  }, 2000);
+  });
 
-  it("should prefer connection string over options options", async (done) => {
-    const conn = new Connection({
-      host: "rabbit",
+  it("should prefer connection string over options options",  () => {
+    conn = new Connection({
+      host: "rabbitmq",
       port: 5672,
-      connectionString: "amqp://rabbit:5672/root"
+      connectionString: "amqp://rabbitmq:5672/root"
     });
-    expect(conn.getConnectionString()).toEqual("amqp://rabbit:5672/root");
-    conn.close();
-    done();
-  }, 2000);
+    expect(conn.getConnectionString()).toEqual("amqp://rabbitmq:5672/root");
+  });
 
-  it("should accept ssl options to connect", async () => {
+  it("should accept ssl options to connect",  () => {
     const mockFile = "123";
 
     const opts = {
@@ -44,12 +44,11 @@ describe("Connection", () => {
       passphrase: '123',
       ca: Buffer.from(mockFile)
     }
-    const conn = new Connection({
-      connectionString: "amqps://rabbit:5671",
+    conn = new Connection({
+      connectionString: "amqp://rabbitmq:5671",
       ssl: opts
     });
 
     expect(conn.getSSLOptions()).toBeDefined();
-    conn.close();
   });
 });

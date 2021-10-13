@@ -71,11 +71,13 @@ export class Publisher extends Client implements IPublisher {
       return;
     }
 
-    const channel: Channel = await this.channel;
-    const sent = channel.publish(exchange, routKey, content, options);
+    const channel = await this.channel;
+    if(channel) {
+      const sent = channel.publish(exchange, routKey, content, options);
 
-    if (!sent) {
-      this.logger.warn(`Message could not be published.`);
+      if (!sent) {
+        this.logger.warn(`Message could not be published.`);
+      }
     }
 
     // TODO - amqplib is buffering messages on it's own too
@@ -109,10 +111,12 @@ export class Publisher extends Client implements IPublisher {
     let reSent = 0;
 
     while (this.drainBuffer.length > 0) {
-      const buf: IDrainBufferItem = this.drainBuffer.pop();
+      const buf = this.drainBuffer.pop();
+      if(buf){
+        this.publish(buf.exchange, buf.routKey, buf.content, buf.options);
+        reSent++;
+      }
 
-      this.publish(buf.exchange, buf.routKey, buf.content, buf.options);
-      reSent++;
     }
 
     return reSent;
@@ -151,14 +155,15 @@ export class Publisher extends Client implements IPublisher {
    * @return {Promise<void>}
    */
   private async hookDrainEvent() {
-    const ch: Channel = await this.channel;
+    const ch = await this.channel;
+    if(ch) {
+      ch.on("drain", () => {
+        this.logger.warn(
+            `AMQP channel Drain Event. Going to resend ${this.drainBuffer.length} messages`
+        );
 
-    ch.on("drain", () => {
-      this.logger.warn(
-        `AMQP channel Drain Event. Going to resend ${this.drainBuffer.length} messages`
-      );
-
-      this.cleanBuffer();
-    });
+        this.cleanBuffer();
+      });
+    }
   }
 }

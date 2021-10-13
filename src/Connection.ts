@@ -32,17 +32,18 @@ export type createChannelCallback = (ch: amqp.Channel) => Promise<void>;
  */
 export class Connection {
   private readonly connStr: string;
-  private readonly sslOptions: object;
+  private readonly sslOptions: object = {};
   private connection: Promise<amqp.Connection>;
-  private channel: amqp.Channel;
+  private channel?: amqp.Channel;
   private recreateConnection: boolean = true;
+  private logger: ILogger = new DevNullLogger();
 
   /**
    *
    * @param {IConnectionOptions} opts
    * @param {ILogger} logger
    */
-  constructor(opts: IConnectionOptions, private logger?: ILogger) {
+  constructor(opts: IConnectionOptions, logger?: ILogger) {
     if (opts.connectionString) {
       this.connStr = opts.connectionString;
     } else {
@@ -66,15 +67,11 @@ export class Connection {
           passphrase: opts.ssl.passphrase ?? undefined,
           ca: [opts.ssl.ca]
         }
-      }      
-    }
-
-    if (!logger) {
-      this.logger = new DevNullLogger();
+      }
     }
 
     this.connection = this.createConnection();
-    this.channel = null;
+    this.channel = undefined;
   }
 
   /**
@@ -126,7 +123,7 @@ export class Connection {
 
       const reconnect: (reason: any) => void = reason => {
         const wait: number = Math.min(WAIT_MS * tryCount, WAIT_MAX_MS); // wait max 5 min
-        this.channel = null;
+        this.channel = undefined;
         this.logger.error(
           `Channel creation failed. Retry after ${wait} ms. Reason: ${reason}`
         );
@@ -138,7 +135,7 @@ export class Connection {
       const tryConnect: () => void = () =>
         this.connection
           .then(connection => {
-            if (reuseChannel && this.channel !== null) {
+            if (reuseChannel && this.channel) {
               return this.channel;
             }
 
@@ -152,7 +149,9 @@ export class Connection {
             return prepareFn(ch);
           })
           .then(() => {
-            return resolve(this.channel);
+            if(this.channel){
+              return resolve(this.channel);
+            }
           })
           .catch(reconnect);
 

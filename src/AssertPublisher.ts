@@ -48,8 +48,9 @@ export class AssertionPublisher extends Publisher implements IPublisher {
    * @return {Promise<Channel>}
    */
   private async assertQueue(name: string) {
-    const channel: Channel = await this.channel;
-
-    return channel.assertQueue(name, this.assertQueueOptions);
+    const channel = await this.channel;
+    if(channel){
+      return channel.assertQueue(name, this.assertQueueOptions);
+    }
   }
 }

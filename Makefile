@@ -10,12 +10,13 @@ test:
 	$(DC) up -d --force-recreate
 	$(DE) sleep 5
 	$(DE) yarn install
-	$(DE) npm run build
 	$(DE) npm test
 
-fast-test:
+build:
 	$(DE) npm run build
-	$(DE) npm test
+
+fast-test:
+	$(DE) npm run lint && npm run test
 
 install:
 	$(DE) yarn install

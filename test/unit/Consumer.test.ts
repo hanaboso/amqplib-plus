@@ -16,7 +16,7 @@ describe("Consumer", () => {
     await conn.close();
   });
 
-  it("should call channel's consume and cancel methods", async (done) => {
+  it("should call channel's consume and cancel methods", async () => {
     let consumeCalled = false;
     let cancelCalled = false;
 
@@ -47,6 +47,5 @@ describe("Consumer", () => {
 
     expect(consumeCalled).toBe(true);
     expect(cancelCalled).toBe(true);
-    done();
-  }, 2000);
+  });
 });

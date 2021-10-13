@@ -1,4 +1,4 @@
-import { Channel, Message, Options, Replies } from "amqplib";
+import { Channel, ConsumeMessage, Message, Options, Replies } from "amqplib";
 
 import { Client } from "./Client";
 
@@ -17,10 +17,16 @@ export abstract class Consumer extends Client {
     options: Options.Consume
   ): Promise<string> {
     const fallback = () => this.consume(queue, options);
-    const channel: Channel = await this.channel;
+    const channel = await this.channel;
 
-    const processFn = (msg: Message) => {
-      this.processMessage(msg, channel);
+    if(!channel) {
+      throw new Error('Channel was not established.');
+    }
+
+    const processFn = (msg: ConsumeMessage | null) => {
+      if (msg){
+        this.processMessage(msg, channel);
+      }
     };
 
     channel.on("close", () => {
@@ -48,8 +54,10 @@ export abstract class Consumer extends Client {
    * @return {Promise<void>}
    */
   public async cancel(consumerTag: string): Promise<void> {
-    const channel: Channel = await this.channel;
-    await channel.cancel(consumerTag);
+    const channel = await this.channel;
+    if(channel) {
+      await channel.cancel(consumerTag);
+    }
 
     return;
   }
